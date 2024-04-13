@@ -16,7 +16,7 @@ To run this application locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/contact-manager.git
+   git clone https://github.com/Apollo-Blaze/Contact-Manager.git
 Install dependencies:
     -cd contact-manager
     -npm install
