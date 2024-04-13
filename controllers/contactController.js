@@ -1,12 +1,13 @@
-const getContact=(req,res)=>{
-    res.status(200).json({message:"Get all contacts"})
-};
- const getaContact=(req,res)=>{
-    res.status(200).json({message:`Get contact for ${req.params.id}`})
-}
+const asyncHandler=require("express-async-handler");
 
-const createContact=(req,res)=>{
-    
+const getContact=asyncHandler(async(req,res)=>{
+    res.status(200).json({message:"Get all contacts"});
+});
+const getaContact=asyncHandler(async(req,res)=>{
+    res.status(200).json({message:`Get contact for ${req.params.id}`})
+})
+
+const createContact=asyncHandler(async(req,res)=>{
     const {name,email,phone}=req.body;
     if(!name||!email||!phone){
         res.status(400);
@@ -14,13 +15,15 @@ const createContact=(req,res)=>{
     }
     console.log("The request is:",req.body);
     res.status(201).json({message:"Create contact"})
-};
+})
 
-const updateContact=(req,res)=>{
+const updateContact=asyncHandler(async(req,res)=>{
     res.status(201).json({message:`Update contact for ${req.params.id}`})
-};
+})
 
-const deleteContact=(req,res)=>{
+const deleteContact=asyncHandler(async(req,res)=>{
     res.status(201).json({message:`Delete contact for ${req.params.id}`})
-};
+})
+
+
 module.exports={getContact,getaContact,createContact,updateContact,deleteContact}
