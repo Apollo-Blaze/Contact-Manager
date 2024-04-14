@@ -3,7 +3,7 @@ const Contact=require("../models/contactModel");
 
 
 const getContact=asyncHandler(async(req,res)=>{
-    const contacts=await Contact.find();
+    const contacts=await Contact.find({user_id:req.user.id});
     res.status(200).json(contacts);
 });
 const getaContact=asyncHandler(async(req,res)=>{
@@ -22,7 +22,7 @@ const createContact=asyncHandler(async(req,res)=>{
         throw new Error("All fields are required")
     }
     const contact=await Contact.create({
-        name,email,phone
+        name,email,phone,user_id: req.user.id
     });
     res.status(201).json(contact)
 })
@@ -32,6 +32,10 @@ const updateContact=asyncHandler(async(req,res)=>{
     if(!contact){
         res.status(404);
         throw new Error("Contact not found")
+    }
+    if(contact.user_id.toString()!==req.user.id){
+        res.status(403);
+        throw new Error("User does not have access to that contact")
     }
     const updatedContact=await Contact.findByIdAndUpdate(
         req.params.id,
@@ -47,7 +51,11 @@ const deleteContact = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Contact not found");
     }
-    await contact.deleteOne(); // Use deleteOne method
+    if(contact.user_id.toString()!==req.user.id){
+        res.status(403);
+        throw new Error("User does not have access to that contact")
+    }
+    await contact.deleteOne({_id:req.params.id}); // Use deleteOne method
     res.status(200).json({ message: "Contact deleted successfully" });
 });
 
